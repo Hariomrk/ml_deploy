@@ -8,18 +8,19 @@ import os
 # Configure Page
 st.set_page_config(
     page_title="EcoTrack AI • Vehicle CO2 Predictor",
-    page_icon="⚡",
+    page_icon="🚗",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom High-End Styling with Bright Red/Pink Gradients, Glassmorphism & Keyframe Animations
+# Custom High-End Styling: Clean Light Background, Crisp Dark Typography, Bright Red/Pink Accents & Animations
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
+        color: #0F172A;
     }
 
     /* Keyframe Animations */
@@ -31,221 +32,196 @@ st.markdown("""
 
     @keyframes pulseGlow {
         0%, 100% {
-            box-shadow: 0 0 20px rgba(255, 0, 128, 0.45), 0 0 45px rgba(225, 29, 72, 0.25);
-            border-color: rgba(255, 46, 147, 0.7);
+            box-shadow: 0 10px 25px -5px rgba(225, 29, 72, 0.4), 0 0 15px rgba(255, 0, 127, 0.2);
+            transform: scale(1);
         }
         50% {
-            box-shadow: 0 0 35px rgba(255, 0, 128, 0.7), 0 0 65px rgba(244, 63, 94, 0.45);
-            border-color: rgba(255, 0, 128, 1);
+            box-shadow: 0 15px 35px -5px rgba(225, 29, 72, 0.6), 0 0 25px rgba(255, 0, 127, 0.4);
+            transform: scale(1.008);
         }
     }
 
-    @keyframes floatCard {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-4px); }
-    }
-
-    @keyframes shimmerBar {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
-    }
-
-    /* Hero Header Banner */
+    /* Hero Header Banner (Bright Pink/Red animated gradient with white text) */
     .hero-container {
-        background: linear-gradient(-45deg, #FF007F, #E11D48, #BE185D, #881337, #FF0055);
+        background: linear-gradient(-45deg, #FF007F, #E11D48, #FF2E93, #F43F5E, #BE185D);
         background-size: 300% 300%;
-        animation: gradientShift 9s ease infinite;
+        animation: gradientShift 8s ease infinite;
         border-radius: 20px;
         padding: 30px 36px;
         color: white;
         margin-bottom: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        box-shadow: 0 15px 35px -5px rgba(225, 29, 72, 0.45);
+        box-shadow: 0 15px 35px -8px rgba(225, 29, 72, 0.45);
         position: relative;
         overflow: hidden;
-    }
-
-    .hero-container::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-        pointer-events: none;
     }
 
     .hero-badge {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 5px 14px;
+        padding: 4px 14px;
         border-radius: 9999px;
-        background: rgba(0, 0, 0, 0.25);
+        background: rgba(255, 255, 255, 0.22);
         backdrop-filter: blur(8px);
-        font-size: 0.8rem;
-        font-weight: 700;
-        letter-spacing: 0.05em;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: #FFE4E6;
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #FFFFFF;
+        border: 1px solid rgba(255, 255, 255, 0.35);
         margin-bottom: 12px;
     }
 
     .hero-title {
-        font-family: 'Outfit', sans-serif;
-        font-size: 2.6rem;
+        font-size: 2.5rem;
         font-weight: 900;
         letter-spacing: -0.02em;
         margin-bottom: 8px;
         display: flex;
         align-items: center;
         gap: 12px;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        color: #FFFFFF;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
     .hero-subtitle {
         font-size: 1.05rem;
-        color: #FFE4E6;
+        color: #FFF1F2;
         max-width: 720px;
         line-height: 1.6;
-        font-weight: 400;
+        font-weight: 500;
     }
 
-    /* Glassmorphic Cards */
-    .glass-card {
-        background: rgba(26, 16, 37, 0.75);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 46, 147, 0.25);
+    /* Section Subheadings (Crisp dark text with pink accent) */
+    .section-head {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #0F172A;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Clean Card Container (White with subtle pink border & shadow) */
+    .clean-card {
+        background: #FFFFFF;
+        border: 1.5px solid #FEE2E2;
         border-radius: 18px;
         padding: 22px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 6px 20px -3px rgba(225, 29, 72, 0.06);
+        transition: all 0.25s ease;
         margin-bottom: 16px;
     }
 
-    .glass-card:hover {
-        border-color: rgba(255, 0, 128, 0.6);
-        box-shadow: 0 12px 35px 0 rgba(255, 0, 128, 0.2);
+    .clean-card:hover {
+        border-color: #FDA4AF;
+        box-shadow: 0 10px 25px -4px rgba(225, 29, 72, 0.12);
     }
 
-    /* Hero Prediction Card */
+    /* Prediction Card (Vibrant Pink/Red Gradient Hero) */
     .metric-hero-pink {
-        background: linear-gradient(135deg, #1C0A1E 0%, #3B0D28 50%, #5B0C2B 100%);
-        border: 2px solid rgba(255, 46, 147, 0.7);
+        background: linear-gradient(135deg, #FF007F 0%, #E11D48 50%, #BE185D 100%);
+        color: white;
         border-radius: 20px;
         padding: 30px 24px;
         text-align: center;
         animation: pulseGlow 4s ease-in-out infinite;
-        position: relative;
-        overflow: hidden;
+        box-shadow: 0 15px 35px -5px rgba(225, 29, 72, 0.45);
     }
 
     .emission-val {
-        font-family: 'Outfit', sans-serif;
-        font-size: 4rem;
+        font-size: 4.2rem;
         font-weight: 900;
         line-height: 1;
         letter-spacing: -0.03em;
-        margin: 14px 0 8px 0;
-        background: linear-gradient(135deg, #FFFFFF 0%, #FECDD3 50%, #FF007F 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 30px rgba(255, 0, 128, 0.5);
+        margin: 12px 0 6px 0;
+        color: #FFFFFF;
+        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
     .emission-unit {
         font-size: 1.4rem;
         font-weight: 600;
-        color: #FDA4AF;
-        -webkit-text-fill-color: #FDA4AF;
+        color: #FFE4E6;
     }
 
     /* Badges */
     .badge {
         display: inline-block;
-        padding: 7px 22px;
+        padding: 7px 20px;
         border-radius: 9999px;
         font-weight: 800;
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        transition: transform 0.2s ease;
+        letter-spacing: 0.05em;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .badge-grade-aplus { background: linear-gradient(135deg, #10B981, #059669); color: white; }
-    .badge-grade-a { background: linear-gradient(135deg, #06B6D4, #0284C7); color: white; }
-    .badge-grade-b { background: linear-gradient(135deg, #F59E0B, #D97706); color: white; }
-    .badge-grade-c { background: linear-gradient(135deg, #F43F5E, #E11D48); color: white; }
-    .badge-grade-d { background: linear-gradient(135deg, #FF0055, #9F1239); color: white; animation: floatCard 2.5s ease-in-out infinite; }
+    .badge-grade-aplus { background: #10B981; color: white; }
+    .badge-grade-a { background: #059669; color: white; }
+    .badge-grade-b { background: #D97706; color: white; }
+    .badge-grade-c { background: #EA580C; color: white; }
+    .badge-grade-d { background: #991B1B; color: white; }
 
-    /* Impact Stats Grid */
+    /* Environmental Impact Stat Boxes (Clean White with Dark Numbers) */
     .impact-stat-box {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 46, 147, 0.2);
+        background: #FFFFFF;
+        border: 1.5px solid #FEE2E2;
         border-radius: 14px;
         padding: 14px 16px;
         text-align: center;
-        transition: transform 0.25s ease, border-color 0.25s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
     .impact-stat-box:hover {
-        transform: translateY(-3px);
-        border-color: rgba(255, 0, 128, 0.5);
-        background: rgba(255, 255, 255, 0.08);
+        transform: translateY(-2px);
+        border-color: #FDA4AF;
+        box-shadow: 0 6px 15px rgba(225, 29, 72, 0.08);
     }
 
     .impact-num {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.45rem;
+        font-size: 1.5rem;
         font-weight: 800;
-        color: #FFF;
+        color: #0F172A;
     }
 
     .impact-label {
         font-size: 0.72rem;
-        color: #FDA4AF;
+        color: #64748B;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         font-weight: 700;
         margin-top: 4px;
     }
 
-    /* Style Streamlit Buttons with Hot Pink / Red Gradients */
+    /* Vibrant Buttons (Bright Pink/Red Gradient) */
     div.stButton > button {
         background: linear-gradient(135deg, #FF007F 0%, #E11D48 100%) !important;
-        color: white !important;
-        font-weight: 700 !important;
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
         border: none !important;
         border-radius: 12px !important;
-        padding: 10px 24px !important;
-        box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4) !important;
+        padding: 10px 22px !important;
+        box-shadow: 0 4px 15px rgba(225, 29, 72, 0.35) !important;
         transition: all 0.25s ease !important;
     }
 
     div.stButton > button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 8px 25px rgba(255, 0, 128, 0.6) !important;
-        filter: brightness(1.1) !important;
+        box-shadow: 0 8px 24px rgba(255, 0, 127, 0.5) !important;
+        filter: brightness(1.08) !important;
     }
 
-    /* Slider styling accent */
+    /* Slider styling */
     div[data-baseweb="slider"] {
         accent-color: #FF007F !important;
     }
 
-    /* Section Subheads */
-    .section-head {
-        font-family: 'Outfit', sans-serif;
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: #FFF;
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    /* Progress bar */
+    div.stProgress > div > div > div > div {
+        background: linear-gradient(90deg, #10B981 0%, #F59E0B 50%, #E11D48 100%) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -279,7 +255,7 @@ if model is None:
         st.success("✅ Model trained successfully!")
         st.rerun()
 
-# Hero Header with Animated Gradient
+# Hero Header with Bright Animated Red/Pink Gradient
 st.markdown("""
 <div class="hero-container">
     <div class="hero-badge">
@@ -289,7 +265,7 @@ st.markdown("""
         <span>🚗</span> EcoTrack Vehicle CO₂ AI
     </div>
     <div class="hero-subtitle">
-        Predict automobile carbon emissions instantly using high-performance Machine Learning. Select a preset or customize engine and transmission specifications below.
+        Predict vehicle carbon emissions instantly using machine learning. Select a quick preset below or adjust vehicle engine and transmission parameters to see live predictions.
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -320,14 +296,14 @@ cur_preset = st.session_state.selected_preset
 st.markdown("<br>", unsafe_allow_html=True)
 
 # Tabs
-tab1, tab2, tab3 = st.tabs(["⚡ Live Prediction Studio", "📂 Batch Fleet Processing", "🔬 Model Architecture & Metrics"])
+tab1, tab2, tab3 = st.tabs(["🎯 Instant Vehicle Predictor", "📂 Batch Fleet Processing", "🧠 Model Architecture & Insights"])
 
 # TAB 1: Single Prediction
 with tab1:
     col_input, col_result = st.columns([1.1, 0.9], gap="large")
 
     with col_input:
-        st.markdown('<div class="section-head"><span>⚙️</span> Vehicle Specifications</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-head"><span>⚙️</span> 1. Vehicle Specifications</div>', unsafe_allow_html=True)
         
         c1, c2 = st.columns(2)
         with c1:
@@ -352,7 +328,6 @@ with tab1:
             cyl_options = options.get("cylinders_options", [3, 4, 5, 6, 8, 10, 12, 16])
             cylinders = st.select_slider("Engine Cylinders", options=cyl_options, value=cur_preset["cyl"])
 
-            # Transmissions with user-friendly descriptions
             transmissions = options.get("transmissions", [])
             trans_labels = [t["label"] for t in transmissions]
             trans_codes = [t["code"] for t in transmissions]
@@ -361,7 +336,6 @@ with tab1:
             selected_trans_label = st.selectbox("Transmission Type", trans_labels, index=default_t_idx)
             transmission = trans_codes[trans_labels.index(selected_trans_label)]
 
-        # Fuel type with explanations
         fuels = options.get("fuel_types", [])
         fuel_labels = [f["label"] for f in fuels]
         fuel_codes = [f["code"] for f in fuels]
@@ -371,7 +345,7 @@ with tab1:
         fuel_type = fuel_codes[fuel_labels.index(selected_fuel_label)]
 
     with col_result:
-        st.markdown('<div class="section-head"><span>🎯</span> Environmental Impact</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-head"><span>🎯</span> 2. Environmental Impact</div>', unsafe_allow_html=True)
         
         # Build inference input
         input_df = pd.DataFrame([{
@@ -390,28 +364,28 @@ with tab1:
         if pred_co2 < 140:
             grade = "A+"
             badge_class = "badge-grade-aplus"
-            status_text = "Ultra Clean / Eco Star"
-            status_desc = "🌟 Outstanding efficiency. In the top 5% cleanest passenger vehicles."
+            status_text = "Ultra Clean / Eco Champion"
+            status_desc = "Top 5% lowest emissions. Significantly outperforms standard road vehicles."
         elif pred_co2 < 180:
             grade = "A"
             badge_class = "badge-grade-a"
-            status_text = "Low Emission Vehicle"
-            status_desc = "🌿 Highly fuel-efficient with minimal environmental carbon impact."
+            status_text = "Eco-Friendly (Low Emission)"
+            status_desc = "Highly efficient passenger vehicle with low carbon footprint."
         elif pred_co2 <= 240:
             grade = "B"
             badge_class = "badge-grade-b"
             status_text = "Moderate (Average Fleet)"
-            status_desc = "⚖️ Standard passenger car emission level on public highways."
+            status_desc = "Matches average Canadian passenger car emissions."
         elif pred_co2 <= 300:
             grade = "C"
             badge_class = "badge-grade-c"
             status_text = "High Emission Vehicle"
-            status_desc = "⚠️ Above-average fuel consumption. Heavy commuter footprint."
+            status_desc = "Higher than average fuel consumption and greenhouse gas release."
         else:
             grade = "D"
             badge_class = "badge-grade-d"
             status_text = "Very High (Gas Guzzler)"
-            status_desc = "🛑 Heavy sports/commercial engine with substantial greenhouse emissions."
+            status_desc = "Heavy vehicle or large sports engine with significant environmental impact."
 
         # Annual metrics (based on 15,000 km / year)
         annual_kg = (pred_co2 * 15000) / 1000
@@ -420,19 +394,19 @@ with tab1:
         canadian_avg = 250.0
         pct_diff = ((pred_co2 - canadian_avg) / canadian_avg) * 100
 
-        # Display Animated Hero Result Card
+        # Display Result Card (Vibrant Pink/Red with white text)
         st.markdown(f"""
         <div class="metric-hero-pink">
-            <div style="font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.12em; color: #FDA4AF; font-weight: 700;">AI PREDICTED TAILPIPE EMISSION</div>
+            <div style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.9; font-weight: 700;">ESTIMATED TAILPIPE EMISSION</div>
             <div class="emission-val">{pred_co2:.1f} <span class="emission-unit">g/km</span></div>
             <div class="badge {badge_class}">ECO GRADE {grade} • {status_text}</div>
-            <div style="font-size: 0.85rem; margin-top: 12px; color: #FFE4E6; font-weight: 500;">{status_desc}</div>
+            <div style="font-size: 0.88rem; margin-top: 10px; opacity: 0.95; font-weight: 500;">{status_desc}</div>
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
         
-        # Environmental impact stats grid
+        # Environmental impact stats (Clean white cards, dark text)
         s1, s2, s3 = st.columns(3)
         with s1:
             st.markdown(f"""
@@ -450,7 +424,7 @@ with tab1:
             """, unsafe_allow_html=True)
         with s3:
             diff_sign = "+" if pct_diff > 0 else ""
-            diff_color = "#FF007F" if pct_diff > 0 else "#10B981"
+            diff_color = "#E11D48" if pct_diff > 0 else "#059669"
             st.markdown(f"""
             <div class="impact-stat-box">
                 <div class="impact-num" style="color: {diff_color};">{diff_sign}{pct_diff:.1f}%</div>
@@ -459,7 +433,7 @@ with tab1:
             """, unsafe_allow_html=True)
 
         # Emission Spectrum Progress
-        st.markdown("<br><b style='color:#FDA4AF; font-size:0.85rem; text-transform:uppercase;'>Emission Spectrum Position:</b>", unsafe_allow_html=True)
+        st.markdown("<br><b style='color:#0F172A; font-size:0.88rem; text-transform:uppercase;'>CO₂ Emission Spectrum:</b>", unsafe_allow_html=True)
         clamped_ratio = min(max(pred_co2 / 500.0, 0.0), 1.0)
         st.progress(clamped_ratio)
         st.caption("0 g/km (Clean / EV) ──────── 250 g/km (Average Fleet) ──────── 500 g/km (Gas Guzzler)")
@@ -516,7 +490,7 @@ with tab2:
 
 # TAB 3: Model Architecture
 with tab3:
-    st.markdown('<div class="section-head"><span>🔬</span> Model Architecture & Key Drivers</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-head"><span>🧠</span> Model Performance & Explainability</div>', unsafe_allow_html=True)
     
     m_data = options.get("metrics", {})
     r1, r2, r3 = st.columns(3)
