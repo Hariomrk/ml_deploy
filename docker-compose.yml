@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  fastapi-api:
+    build: .
+    container_name: co2_predictor_api
+    command: uvicorn app_api:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - .:/app
+
+  streamlit-ui:
+    build: .
+    container_name: co2_predictor_streamlit
+    command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    restart: unless-stopped
+    depends_on:
+      - fastapi-api
