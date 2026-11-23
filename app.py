@@ -8,60 +8,112 @@ import os
 # Configure Page
 st.set_page_config(
     page_title="EcoTrack AI • Vehicle CO2 Predictor",
-    page_icon="🚗",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom High-End Styling: Clean Light Background, Crisp Dark Typography, Bright Red/Pink Accents & Animations
-st.markdown("""
+# Initialize Session State for Theme
+if 'dark_mode' not in st.session_state:
+    st.session_state.dark_mode = False
+
+# Sidebar Theme Controller
+with st.sidebar:
+    st.markdown("### 🎨 Display Preferences")
+    theme_toggle = st.toggle("🌙 Dark Mode", value=st.session_state.dark_mode)
+    if theme_toggle != st.session_state.dark_mode:
+        st.session_state.dark_mode = theme_toggle
+        st.rerun()
+
+is_dark = st.session_state.dark_mode
+
+# Dynamic Palette based on Dark Mode Toggle
+if is_dark:
+    # Sleek Midnight Obsidian & Neon Rose Theme
+    bg_color = "#0B0813"
+    card_bg = "rgba(22, 14, 32, 0.85)"
+    card_border = "rgba(255, 46, 147, 0.35)"
+    card_hover_border = "rgba(255, 0, 127, 0.75)"
+    text_main = "#FFFFFF"
+    text_sub = "#FDA4AF"
+    text_muted = "#94A3B8"
+    input_bg = "#150D20"
+    input_border = "rgba(255, 46, 147, 0.4)"
+    input_text = "#FFFFFF"
+    stat_box_bg = "rgba(255, 255, 255, 0.05)"
+    stat_box_border = "rgba(255, 46, 147, 0.25)"
+    hero_gradient = "linear-gradient(135deg, #1A071E 0%, #380B26 50%, #5E0D32 100%)"
+    hero_border = "rgba(255, 0, 127, 0.5)"
+    pulse_glow_color = "rgba(255, 0, 127, 0.55)"
+else:
+    # Clean Bright Pearlescent Light Theme with Crisp Dark Text & Rose Accents
+    bg_color = "#F8FAFC"
+    card_bg = "#FFFFFF"
+    card_border = "#FEE2E2"
+    card_hover_border = "#FDA4AF"
+    text_main = "#0F172A"
+    text_sub = "#334155"
+    text_muted = "#64748B"
+    input_bg = "#FFFFFF"
+    input_border = "#E2E8F0"
+    input_text = "#0F172A"
+    stat_box_bg = "#FFFFFF"
+    stat_box_border = "#FEE2E2"
+    hero_gradient = "linear-gradient(-45deg, #FF007F, #E11D48, #FF2E93, #F43F5E, #BE185D)"
+    hero_border = "rgba(225, 29, 72, 0.3)"
+    pulse_glow_color = "rgba(225, 29, 72, 0.45)"
+
+# Inject Theme CSS
+st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
     
-    html, body, [class*="css"] {
+    .stApp {{
+        background-color: {bg_color} !important;
         font-family: 'Plus Jakarta Sans', sans-serif;
-        color: #0F172A;
-    }
+        color: {text_main};
+    }}
 
     /* Keyframe Animations */
-    @keyframes gradientShift {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
+    @keyframes gradientShift {{
+        0% {{ background-position: 0% 50%; }}
+        50% {{ background-position: 100% 50%; }}
+        100% {{ background-position: 0% 50%; }}
+    }}
 
-    @keyframes pulseGlow {
-        0%, 100% {
-            box-shadow: 0 10px 25px -5px rgba(225, 29, 72, 0.4), 0 0 15px rgba(255, 0, 127, 0.2);
+    @keyframes pulseGlow {{
+        0%, 100% {{
+            box-shadow: 0 10px 30px -5px {pulse_glow_color}, 0 0 15px rgba(255, 0, 127, 0.25);
             transform: scale(1);
-        }
-        50% {
-            box-shadow: 0 15px 35px -5px rgba(225, 29, 72, 0.6), 0 0 25px rgba(255, 0, 127, 0.4);
+        }}
+        50% {{
+            box-shadow: 0 16px 40px -5px {pulse_glow_color}, 0 0 25px rgba(255, 0, 127, 0.45);
             transform: scale(1.008);
-        }
-    }
+        }}
+    }}
 
-    /* Hero Header Banner (Bright Pink/Red animated gradient with white text) */
-    .hero-container {
-        background: linear-gradient(-45deg, #FF007F, #E11D48, #FF2E93, #F43F5E, #BE185D);
+    /* Hero Header Banner */
+    .hero-container {{
+        background: {hero_gradient};
         background-size: 300% 300%;
         animation: gradientShift 8s ease infinite;
         border-radius: 20px;
         padding: 30px 36px;
         color: white;
         margin-bottom: 24px;
-        box-shadow: 0 15px 35px -8px rgba(225, 29, 72, 0.45);
+        box-shadow: 0 15px 35px -8px rgba(225, 29, 72, 0.35);
+        border: 1px solid {hero_border};
         position: relative;
         overflow: hidden;
-    }
+    }}
 
-    .hero-badge {
+    .hero-badge {{
         display: inline-flex;
         align-items: center;
         gap: 6px;
         padding: 4px 14px;
         border-radius: 9999px;
-        background: rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(8px);
         font-size: 0.78rem;
         font-weight: 800;
@@ -70,9 +122,9 @@ st.markdown("""
         color: #FFFFFF;
         border: 1px solid rgba(255, 255, 255, 0.35);
         margin-bottom: 12px;
-    }
+    }}
 
-    .hero-title {
+    .hero-title {{
         font-size: 2.5rem;
         font-weight: 900;
         letter-spacing: -0.02em;
@@ -81,73 +133,73 @@ st.markdown("""
         align-items: center;
         gap: 12px;
         color: #FFFFFF;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }}
 
-    .hero-subtitle {
+    .hero-subtitle {{
         font-size: 1.05rem;
         color: #FFF1F2;
         max-width: 720px;
         line-height: 1.6;
         font-weight: 500;
-    }
+    }}
 
-    /* Section Subheadings (Crisp dark text with pink accent) */
-    .section-head {
+    /* Section Subheadings */
+    .section-head {{
         font-size: 1.25rem;
         font-weight: 800;
-        color: #0F172A;
+        color: {text_main};
         margin-bottom: 14px;
         display: flex;
         align-items: center;
         gap: 8px;
-    }
+    }}
 
-    /* Clean Card Container (White with subtle pink border & shadow) */
-    .clean-card {
-        background: #FFFFFF;
-        border: 1.5px solid #FEE2E2;
+    /* Responsive Cards */
+    .custom-card {{
+        background: {card_bg};
+        border: 1.5px solid {card_border};
         border-radius: 18px;
         padding: 22px;
-        box-shadow: 0 6px 20px -3px rgba(225, 29, 72, 0.06);
+        box-shadow: 0 6px 20px -3px rgba(0, 0, 0, 0.05);
         transition: all 0.25s ease;
         margin-bottom: 16px;
-    }
+    }}
 
-    .clean-card:hover {
-        border-color: #FDA4AF;
-        box-shadow: 0 10px 25px -4px rgba(225, 29, 72, 0.12);
-    }
+    .custom-card:hover {{
+        border-color: {card_hover_border};
+        box-shadow: 0 10px 25px -4px rgba(225, 29, 72, 0.15);
+    }}
 
-    /* Prediction Card (Vibrant Pink/Red Gradient Hero) */
-    .metric-hero-pink {
+    /* Prediction Result Card */
+    .metric-hero-pink {{
         background: linear-gradient(135deg, #FF007F 0%, #E11D48 50%, #BE185D 100%);
         color: white;
         border-radius: 20px;
         padding: 30px 24px;
         text-align: center;
         animation: pulseGlow 4s ease-in-out infinite;
-        box-shadow: 0 15px 35px -5px rgba(225, 29, 72, 0.45);
-    }
+        border: 1.5px solid rgba(255, 255, 255, 0.3);
+    }}
 
-    .emission-val {
+    .emission-val {{
         font-size: 4.2rem;
         font-weight: 900;
         line-height: 1;
         letter-spacing: -0.03em;
         margin: 12px 0 6px 0;
         color: #FFFFFF;
-        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
+        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    }}
 
-    .emission-unit {
+    .emission-unit {{
         font-size: 1.4rem;
         font-weight: 600;
         color: #FFE4E6;
-    }
+    }}
 
     /* Badges */
-    .badge {
+    .badge {{
         display: inline-block;
         padding: 7px 20px;
         border-radius: 9999px;
@@ -156,48 +208,48 @@ st.markdown("""
         text-transform: uppercase;
         letter-spacing: 0.05em;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
+    }}
 
-    .badge-grade-aplus { background: #10B981; color: white; }
-    .badge-grade-a { background: #059669; color: white; }
-    .badge-grade-b { background: #D97706; color: white; }
-    .badge-grade-c { background: #EA580C; color: white; }
-    .badge-grade-d { background: #991B1B; color: white; }
+    .badge-grade-aplus {{ background: #10B981; color: white; }}
+    .badge-grade-a {{ background: #059669; color: white; }}
+    .badge-grade-b {{ background: #D97706; color: white; }}
+    .badge-grade-c {{ background: #EA580C; color: white; }}
+    .badge-grade-d {{ background: #991B1B; color: white; }}
 
-    /* Environmental Impact Stat Boxes (Clean White with Dark Numbers) */
-    .impact-stat-box {
-        background: #FFFFFF;
-        border: 1.5px solid #FEE2E2;
+    /* Environmental Impact Stat Boxes */
+    .impact-stat-box {{
+        background: {stat_box_bg};
+        border: 1.5px solid {stat_box_border};
         border-radius: 14px;
         padding: 14px 16px;
         text-align: center;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
         transition: transform 0.2s ease, border-color 0.2s ease;
-    }
+    }}
 
-    .impact-stat-box:hover {
+    .impact-stat-box:hover {{
         transform: translateY(-2px);
-        border-color: #FDA4AF;
-        box-shadow: 0 6px 15px rgba(225, 29, 72, 0.08);
-    }
+        border-color: {card_hover_border};
+        box-shadow: 0 6px 15px rgba(225, 29, 72, 0.12);
+    }}
 
-    .impact-num {
+    .impact-num {{
         font-size: 1.5rem;
         font-weight: 800;
-        color: #0F172A;
-    }
+        color: {text_main};
+    }}
 
-    .impact-label {
+    .impact-label {{
         font-size: 0.72rem;
-        color: #64748B;
+        color: {text_muted};
         text-transform: uppercase;
         letter-spacing: 0.05em;
         font-weight: 700;
         margin-top: 4px;
-    }
+    }}
 
     /* Vibrant Buttons (Bright Pink/Red Gradient) */
-    div.stButton > button {
+    div.stButton > button {{
         background: linear-gradient(135deg, #FF007F 0%, #E11D48 100%) !important;
         color: #FFFFFF !important;
         font-weight: 800 !important;
@@ -206,23 +258,18 @@ st.markdown("""
         padding: 10px 22px !important;
         box-shadow: 0 4px 15px rgba(225, 29, 72, 0.35) !important;
         transition: all 0.25s ease !important;
-    }
+    }}
 
-    div.stButton > button:hover {
+    div.stButton > button:hover {{
         transform: translateY(-2px) !important;
         box-shadow: 0 8px 24px rgba(255, 0, 127, 0.5) !important;
         filter: brightness(1.08) !important;
-    }
+    }}
 
-    /* Slider styling */
-    div[data-baseweb="slider"] {
+    /* Slider accent */
+    div[data-baseweb="slider"] {{
         accent-color: #FF007F !important;
-    }
-
-    /* Progress bar */
-    div.stProgress > div > div > div > div {
-        background: linear-gradient(90deg, #10B981 0%, #F59E0B 50%, #E11D48 100%) !important;
-    }
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -255,7 +302,7 @@ if model is None:
         st.success("✅ Model trained successfully!")
         st.rerun()
 
-# Hero Header with Bright Animated Red/Pink Gradient
+# Top Header with Theme Switcher Status
 st.markdown("""
 <div class="hero-container">
     <div class="hero-badge">
@@ -270,7 +317,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Presets Quick-Click Section
+# Presets Section
 st.markdown('<div class="section-head"><span>🔥</span> Popular Vehicle Presets</div>', unsafe_allow_html=True)
 preset_cols = st.columns(5)
 
@@ -394,7 +441,7 @@ with tab1:
         canadian_avg = 250.0
         pct_diff = ((pred_co2 - canadian_avg) / canadian_avg) * 100
 
-        # Display Result Card (Vibrant Pink/Red with white text)
+        # Display Result Card
         st.markdown(f"""
         <div class="metric-hero-pink">
             <div style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.9; font-weight: 700;">ESTIMATED TAILPIPE EMISSION</div>
@@ -406,7 +453,7 @@ with tab1:
 
         st.markdown("<br>", unsafe_allow_html=True)
         
-        # Environmental impact stats (Clean white cards, dark text)
+        # Environmental impact stats
         s1, s2, s3 = st.columns(3)
         with s1:
             st.markdown(f"""
@@ -433,7 +480,7 @@ with tab1:
             """, unsafe_allow_html=True)
 
         # Emission Spectrum Progress
-        st.markdown("<br><b style='color:#0F172A; font-size:0.88rem; text-transform:uppercase;'>CO₂ Emission Spectrum:</b>", unsafe_allow_html=True)
+        st.markdown(f"<br><b style='color:{text_main}; font-size:0.88rem; text-transform:uppercase;'>CO₂ Emission Spectrum:</b>", unsafe_allow_html=True)
         clamped_ratio = min(max(pred_co2 / 500.0, 0.0), 1.0)
         st.progress(clamped_ratio)
         st.caption("0 g/km (Clean / EV) ──────── 250 g/km (Average Fleet) ──────── 500 g/km (Gas Guzzler)")
